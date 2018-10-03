@@ -85,7 +85,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 212709221812867418}
   tileX: 0
   tileY: 0
-  manager: {fileID: 0}
 --- !u!212 &212709221812867418
 SpriteRenderer:
   m_ObjectHideFlags: 1

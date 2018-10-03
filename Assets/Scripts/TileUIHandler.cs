@@ -35,7 +35,6 @@ public class TileUIHandler : MonoBehaviour {
             //LevelManager.Instance.tileTypes[LevelEditor.Instance.currentTileType].tileVisual.GetComponent<TileUIHandler>().myColor;
             LevelEditor.Instance.hoveredTile = LevelManager.Instance.graph[tileX, tileY];
             Debug.Log("Current Hovered: " + LevelEditor.Instance.hoveredTile.x + ", " + LevelEditor.Instance.hoveredTile.y);
-            
         }
     }
 
