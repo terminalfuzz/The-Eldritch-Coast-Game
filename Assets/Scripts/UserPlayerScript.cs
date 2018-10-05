@@ -15,4 +15,10 @@ public class UserPlayerScript : PlayerScript {
     void Update() {
 
     }
+
+    override public void takeTurn()
+    {
+
+    }
+
 }

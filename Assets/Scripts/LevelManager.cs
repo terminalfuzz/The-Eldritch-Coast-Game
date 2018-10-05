@@ -171,18 +171,18 @@ public class LevelManager : MonoBehaviour {
             {
                 if (tiles[x, y] == 2)
                 {
-                    GameObject player = Instantiate(userPlayerPrefab, new Vector3(x, 0, y), Quaternion.AngleAxis(-45, Vector3.up));
-                    GameManager.Instance.turnOrder.Add(player);
-                    player.GetComponent<PlayerScript>().tileX = x;
-                    player.GetComponent<PlayerScript>().tileY = y;
-                    player.GetComponent<PlayerScript>().speed = 4;
+                    PlayerScript player = Instantiate(userPlayerPrefab.GetComponent<PlayerScript>(), new Vector3(x, 0, y), Quaternion.AngleAxis(-45, Vector3.up));
+                    TurnManager.Instance.units.Add(player);
+                    player.tileX = x;
+                    player.tileY = y;
+                    player.speed = 4;
                 }
                 else if (tiles[x, y] == 3)
                 {
-                    GameObject enemy = Instantiate(tileTypes[3].spawnObject, new Vector3(x, 0, y), Quaternion.AngleAxis(-45, Vector3.up));
-                    GameManager.Instance.turnOrder.Add(enemy);
-                    enemy.GetComponent<PlayerScript>().tileX = x;
-                    enemy.GetComponent<PlayerScript>().tileY = y;
+                    PlayerScript enemy = Instantiate(tileTypes[3].spawnObject.GetComponent<PlayerScript>(), new Vector3(x, 0, y), Quaternion.AngleAxis(-45, Vector3.up));
+                    TurnManager.Instance.units.Add(enemy);
+                    enemy.tileX = x;
+                    enemy.tileY = y;
                 }
             }
         }

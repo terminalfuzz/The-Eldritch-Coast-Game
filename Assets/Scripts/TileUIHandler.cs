@@ -23,9 +23,9 @@ public class TileUIHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		foreach (GameObject gameObject in GameManager.Instance.turnOrder)
+		foreach (PlayerScript unit in TurnManager.Instance.units)
         {
-            if (gameObject.GetComponent<PlayerScript>().tileX == tileX && gameObject.GetComponent<PlayerScript>().tileY == tileY)
+            if (unit.tileX == tileX && unit.tileY == tileY)
             {
                 isOccupied = true;
             }
@@ -54,7 +54,7 @@ public class TileUIHandler : MonoBehaviour {
             }
             else
             {
-                GameManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath = null;
+                TurnManager.Instance.currentPlayer.currentPath = null;
             }
         }
     }

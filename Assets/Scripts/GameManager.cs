@@ -16,10 +16,6 @@ public class GameManager : MonoBehaviour
     }
 
     public GameObject userPlayerPrefab;
-    public GameObject currentPlayer;
-    public List<GameObject> turnOrder = new List<GameObject>();
-
-    public int currentPlayerIndex;
 
     List<Node> currentPath = null;
 
@@ -33,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {/*
         currentPlayer = turnOrder[currentPlayerIndex];
 
         LevelManager.Instance.resetTileColors();
@@ -49,22 +45,7 @@ public class GameManager : MonoBehaviour
                 currNode++;
             }
         }   
-
-    }
-
-    public void nextTurn()
-    {
-        if (turnOrder.Count > 0)
-        {
-            if (currentPlayerIndex + 1 < turnOrder.Count)
-            {
-                currentPlayerIndex++;
-            }
-            else
-            {
-                currentPlayerIndex = 0;
-            }
-        }
+        */
     }
 
     public static Vector3 TileCoordToWorldCoord(int x, int y)
@@ -76,10 +57,10 @@ public class GameManager : MonoBehaviour
     {
         //Tile x,y will not always be the transforms actual x,y position in the world
 
-        currentPlayer.GetComponent<PlayerScript>().tileX = (int)currentPlayer.transform.position.x;
-        currentPlayer.GetComponent<PlayerScript>().tileY = (int)currentPlayer.transform.position.z;
+        TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().tileX = (int)TurnManager.Instance.currentPlayer.transform.position.x;
+        TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().tileY = (int)TurnManager.Instance.currentPlayer.transform.position.z;
 
-        Debug.Log(currentPlayer.GetComponent<PlayerScript>().tileX + ", " + currentPlayer.GetComponent<PlayerScript>().tileY);
+        Debug.Log(TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().tileX + ", " + TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().tileY);
 
         currentPath = null;
 
@@ -88,7 +69,8 @@ public class GameManager : MonoBehaviour
 
         List<Node> unvisited = new List<Node>();
 
-        Node source = LevelManager.Instance.graph[currentPlayer.GetComponent<PlayerScript>().tileX, currentPlayer.GetComponent<PlayerScript>().tileY];
+        Node source = LevelManager.Instance.graph[TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().tileX, 
+            TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().tileY];
         Node target = LevelManager.Instance.graph[x, y];
 
         //Pathfinding via Dijkstra
@@ -154,15 +136,15 @@ public class GameManager : MonoBehaviour
 
         currentPath.Reverse();
         
-        if (currentPath.Count <= currentPlayer.GetComponent<UserPlayerScript>().speed)
+        if (currentPath.Count <= TurnManager.Instance.currentPlayer.GetComponent<UserPlayerScript>().speed + 1)
         {
-            currentPlayer.GetComponent<UserPlayerScript>().currentPath = currentPath;
+            TurnManager.Instance.currentPlayer.GetComponent<UserPlayerScript>().currentPath = currentPath;
         }
         else
         {
-            currentPlayer.GetComponent<UserPlayerScript>().currentPath = null;
+            TurnManager.Instance.currentPlayer.GetComponent<UserPlayerScript>().currentPath = null;
         }
-    }
+    } // Dijkstra
 
     public void moveNextTile()
     {
@@ -170,16 +152,20 @@ public class GameManager : MonoBehaviour
         try
         {
             int i = 0;
-            while (i < currentPlayer.GetComponent<PlayerScript>().currentPath.Count + 1)
+            while (i < TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath.Count + 1)
             {
 
-                if (currentPlayer.GetComponent<PlayerScript>().currentPath.Count == 1)
+                if (TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath.Count == 1)
                 {
                     break;
                 }
 
-                currentPlayer.GetComponent<PlayerScript>().currentPath.RemoveAt(0);
-                currentPlayer.transform.position = TileCoordToWorldCoord(currentPlayer.GetComponent<PlayerScript>().currentPath[0].x, currentPlayer.GetComponent<PlayerScript>().currentPath[0].y);
+                TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath.RemoveAt(0);
+                TurnManager.Instance.currentPlayer.transform.position = 
+                    TileCoordToWorldCoord(
+                        TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath[0].x, 
+                        TurnManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath[0].y
+                        );
                 Debug.Log("Moving");
             }
         }

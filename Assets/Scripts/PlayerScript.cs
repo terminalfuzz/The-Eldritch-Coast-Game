@@ -44,4 +44,6 @@ public class PlayerScript : MonoBehaviour {
 
     }
 
+    public virtual void takeTurn() { }
+
 }

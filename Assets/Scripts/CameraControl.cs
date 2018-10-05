@@ -11,7 +11,7 @@ public class CameraControl : MonoBehaviour {
     private void Start()
     {
         try {
-            Camera.main.transform.position = GameManager.Instance.currentPlayer.transform.position + (new Vector3(8, 4, -8));
+            Camera.main.transform.position = TurnManager.Instance.currentPlayer.transform.position + (new Vector3(8, 4, -8));
         }
         catch
         {
@@ -41,7 +41,7 @@ public class CameraControl : MonoBehaviour {
 
         if (Input.GetMouseButton(2))
         {
-            Camera.main.transform.position = GameManager.Instance.currentPlayer.transform.position + (new Vector3(8, 4, -8));
+            Camera.main.transform.position = TurnManager.Instance.currentPlayer.transform.position + (new Vector3(8, 4, -8));
         }
     }
 }
