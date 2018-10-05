@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AIPlayerScript : PlayerScript {
 
+    public bool isMyTurn;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -13,10 +15,5 @@ public class AIPlayerScript : PlayerScript {
 	void Update () {
 		
 	}
-
-    public override void TurnUpdate()
-    {
-        base.TurnUpdate();
-    }
 
 }

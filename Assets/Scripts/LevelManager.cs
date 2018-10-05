@@ -8,6 +8,7 @@ public class Node
     public List<Node> edges;
     public int x;
     public int y;
+    public TileUIHandler tileUI;
 
     public Node()
     {
@@ -54,6 +55,7 @@ public class LevelManager : MonoBehaviour {
         generateMap();
         generatePathfindingGraph();
         generateVisualMap();
+        generatePlayers();
     }
 	
 	// Update is called once per frame
@@ -71,9 +73,11 @@ public class LevelManager : MonoBehaviour {
                 tiles[x, y] = 0;
             }
         }
-        /*
+        
         //Test for blocked tiles
         tiles[0, 0] = 2; //Player Spawn
+
+        tiles[0, 3] = 3; //Enemy Spawn
 
         tiles[4, 4] = 1; //Unwalkable Tiles
         tiles[5, 4] = 1;
@@ -85,7 +89,7 @@ public class LevelManager : MonoBehaviour {
         tiles[4, 6] = 1;
         tiles[8, 5] = 1;
         tiles[8, 6] = 1;
-        */
+        
     }
 
     void generatePathfindingGraph()
@@ -152,9 +156,34 @@ public class LevelManager : MonoBehaviour {
                 TileType tt = tileTypes[tiles[x, y]];
                 GameObject go = (GameObject)Instantiate(tt.tileVisual, new Vector3(x, 0, y), Quaternion.identity);
 
-                TileUIHandler ui = go.GetComponent<TileUIHandler>();
-                ui.tileX = x;
-                ui.tileY = y;
+                graph[x, y].tileUI = go.GetComponent<TileUIHandler>();
+                graph[x, y].tileUI.tileX = x;
+                graph[x, y].tileUI.tileY = y;
+            }
+        }
+    }
+
+    void generatePlayers()
+    {
+        for (int x = 0; x < mapSizeX; x++)
+        {
+            for (int y = 0; y < mapSizeY; y++)
+            {
+                if (tiles[x, y] == 2)
+                {
+                    GameObject player = Instantiate(userPlayerPrefab, new Vector3(x, 0, y), Quaternion.AngleAxis(-45, Vector3.up));
+                    GameManager.Instance.turnOrder.Add(player);
+                    player.GetComponent<PlayerScript>().tileX = x;
+                    player.GetComponent<PlayerScript>().tileY = y;
+                    player.GetComponent<PlayerScript>().speed = 4;
+                }
+                else if (tiles[x, y] == 3)
+                {
+                    GameObject enemy = Instantiate(tileTypes[3].spawnObject, new Vector3(x, 0, y), Quaternion.AngleAxis(-45, Vector3.up));
+                    GameManager.Instance.turnOrder.Add(enemy);
+                    enemy.GetComponent<PlayerScript>().tileX = x;
+                    enemy.GetComponent<PlayerScript>().tileY = y;
+                }
             }
         }
     }
@@ -165,13 +194,24 @@ public class LevelManager : MonoBehaviour {
 
         float cost = tt.movementCost;
 
-        //Favor straight lines in pathfinding
-        if (sourceX != targetX && sourceY != targetY)
+        if (sourceX != targetX && sourceY != targetY) //Favor straight lines in pathfinding
         {
             cost += 0.001f;
         }
+        if (graph[targetX, targetY].tileUI.isOccupied) //Can't walk on tiles that are occupied by other players
+        {
+            cost += 99999;
+        }
 
         return cost;
+    }
+
+    public void resetTileColors()
+    {
+        foreach (Node node in graph)
+        {
+            node.tileUI.meshRenderer.material.color = node.tileUI.myColor;
+        }
     }
 
 }

@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
 
-    public Vector3 moveDestination;
+    public int hitPoints;
+    public int defense;
+
+    public int tileX;
+    public int tileY;
+
+    public List<Node> currentPath = null;
 
     public SpriteRenderer spriteRenderer;
+    public int speed;
 
-    private void Awake()
+    /*public PlayerScript(int hitPoints, int defense, int speed, int x, int y)
     {
-        moveDestination = transform.position;
+        this.hitPoints = hitPoints;
+        this.defense = defense;
+        this.speed = hitPoints;
+        tileX = x;
+        tileY = y;
     }
-
+    */
     // Use this for initialization
     void Start () {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -24,6 +35,11 @@ public class PlayerScript : MonoBehaviour {
 	}
     
     public virtual void TurnUpdate()
+    {
+
+    } 
+
+    public void basicAttack(GameObject target)
     {
 
     }

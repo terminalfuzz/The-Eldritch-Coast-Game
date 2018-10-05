@@ -6,11 +6,14 @@ public class TileUIHandler : MonoBehaviour {
    
     public int tileX;
     public int tileY;
+    public bool isOccupied = false ;
 
-    private MeshRenderer meshRenderer;
+
+    public MeshRenderer meshRenderer;
     private bool isSelected;
-    private Color myColor;
+    public Color myColor;
 
+    private bool editor;
 
 	// Use this for initialization
 	void Start () {
@@ -20,21 +23,39 @@ public class TileUIHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		foreach (GameObject gameObject in GameManager.Instance.turnOrder)
+        {
+            if (gameObject.GetComponent<PlayerScript>().tileX == tileX && gameObject.GetComponent<PlayerScript>().tileY == tileY)
+            {
+                isOccupied = true;
+            }
+            else
+            {
+                isOccupied = false;
+            }
+        }
 	}
 
     private void OnMouseEnter()
     {
-        if (!LevelEditor.Instance.editorMode)
+        try
         {
-            meshRenderer.material.color = Color.red;
-            //GameManager.Instance.findBestRouteTo(tileX, tileY);
-        } else
-        {
+            editor = LevelEditor.Instance.editorMode;
             meshRenderer.material.color = Color.blue;
             //LevelManager.Instance.tileTypes[LevelEditor.Instance.currentTileType].tileVisual.GetComponent<TileUIHandler>().myColor;
             LevelEditor.Instance.hoveredTile = LevelManager.Instance.graph[tileX, tileY];
             Debug.Log("Current Hovered: " + LevelEditor.Instance.hoveredTile.x + ", " + LevelEditor.Instance.hoveredTile.y);
+        }
+        catch
+        {
+            meshRenderer.material.color = Color.red;
+            if (LevelManager.Instance.tiles[tileX, tileY] != 1 && !LevelManager.Instance.graph[tileX, tileY].tileUI.isOccupied) {
+                GameManager.Instance.findBestRouteTo(tileX, tileY);
+            }
+            else
+            {
+                GameManager.Instance.currentPlayer.GetComponent<PlayerScript>().currentPath = null;
+            }
         }
     }
 
@@ -45,7 +66,7 @@ public class TileUIHandler : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        
+        GameManager.Instance.moveNextTile();
     }
 
 }

@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58d0fcf88f896a458603f30dfa27cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userPlayerPrefab: {fileID: 1295546103618926, guid: d6725364daabc1a4ca503c05700d08b4,
+  userPlayerPrefab: {fileID: 1746572647626764, guid: d6725364daabc1a4ca503c05700d08b4,
     type: 2}
   currentPlayer: {fileID: 1295546103618926, guid: d6725364daabc1a4ca503c05700d08b4,
     type: 2}
@@ -61,15 +61,26 @@ MonoBehaviour:
   - name: Floor
     tileVisual: {fileID: 1892517516616126, guid: 070b7593b02db9549b7fae70cdf70203,
       type: 2}
+    spawnObject: {fileID: 0}
     movementCost: 1
     isClickable: 1
   - name: Wall
     tileVisual: {fileID: 1072748419587510, guid: 36f7929a9bd11c24483f962fc7939da2,
       type: 2}
+    spawnObject: {fileID: 0}
     movementCost: 1e+21
     isClickable: 0
-  - name: Spawn
+  - name: PlayerSpawn
     tileVisual: {fileID: 1436249527543168, guid: b1857ed10c2973b48818d56bddea3ba8,
+      type: 2}
+    spawnObject: {fileID: 1295546103618926, guid: d6725364daabc1a4ca503c05700d08b4,
+      type: 2}
+    movementCost: 1
+    isClickable: 1
+  - name: EnemySpawn
+    tileVisual: {fileID: 1121701125965172, guid: c92597922fa0c3f459605c86e1cc60dc,
+      type: 2}
+    spawnObject: {fileID: 1500523594062740, guid: 13c4f32ac0dead34196338a565c72bc0,
       type: 2}
     movementCost: 1
     isClickable: 1

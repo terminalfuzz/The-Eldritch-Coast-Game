@@ -29,32 +29,26 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
-
-        turnOrder.Add(currentPlayer);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (turnOrder.Count > 0)
-        {
-            currentPlayer = turnOrder[currentPlayerIndex];
-        }
+        currentPlayer = turnOrder[currentPlayerIndex];
 
-        if (currentPlayer.GetComponent<UserPlayerScript>().currentPath != null)
+        LevelManager.Instance.resetTileColors();
+        //Highlight Tiles
+        if (currentPlayer.GetComponent<PlayerScript>().currentPath != null)
         {
             int currNode = 0;
-            while (currNode < currentPath.Count - 1)
+            //Highlight path with yellow tiles
+            while (currNode < currentPlayer.GetComponent<PlayerScript>().currentPath.Count - 1)
             {
-                Vector3 start = TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) + new Vector3(0, 0.3f, 0);
-                Vector3 end = TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) + new Vector3(0, 0.3f, 0);
-
-                Debug.DrawLine(start, end, Color.red);
-
+                LevelManager.Instance.graph[currentPlayer.GetComponent<PlayerScript>().currentPath[currNode + 1].x, currentPlayer.GetComponent<PlayerScript>().currentPath[currNode + 1].y].tileUI.meshRenderer.material.color 
+                    = Color.yellow;
                 currNode++;
             }
-        }
+        }   
 
     }
 
@@ -73,18 +67,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Vector3 TileCoordToWorldCoord(int x, int y)
+    public static Vector3 TileCoordToWorldCoord(int x, int y)
     {
         return new Vector3(x, 0, y);
     }
 
     public void findBestRouteTo(int x, int y)
     {
-        Debug.Log("Current Player: " + currentPlayer);
         //Tile x,y will not always be the transforms actual x,y position in the world
 
-        currentPlayer.GetComponent<UserPlayerScript>().tileX = (int)currentPlayer.transform.position.x;
-        currentPlayer.GetComponent<UserPlayerScript>().tileY = (int)currentPlayer.transform.position.y;
+        currentPlayer.GetComponent<PlayerScript>().tileX = (int)currentPlayer.transform.position.x;
+        currentPlayer.GetComponent<PlayerScript>().tileY = (int)currentPlayer.transform.position.z;
+
+        Debug.Log(currentPlayer.GetComponent<PlayerScript>().tileX + ", " + currentPlayer.GetComponent<PlayerScript>().tileY);
 
         currentPath = null;
 
@@ -93,7 +88,7 @@ public class GameManager : MonoBehaviour
 
         List<Node> unvisited = new List<Node>();
 
-        Node source = LevelManager.Instance.graph[currentPlayer.GetComponent<UserPlayerScript>().tileX, currentPlayer.GetComponent<UserPlayerScript>().tileY];
+        Node source = LevelManager.Instance.graph[currentPlayer.GetComponent<PlayerScript>().tileX, currentPlayer.GetComponent<PlayerScript>().tileY];
         Node target = LevelManager.Instance.graph[x, y];
 
         //Pathfinding via Dijkstra
@@ -158,32 +153,40 @@ public class GameManager : MonoBehaviour
         }
 
         currentPath.Reverse();
- 
-        currentPlayer.GetComponent<UserPlayerScript>().currentPath = currentPath;
-    }
-
-    public void moveNextTile(int speed)
-    {
-        for (int i = 0; i < speed; i++)
+        
+        if (currentPath.Count <= currentPlayer.GetComponent<UserPlayerScript>().speed)
         {
-            if (currentPath == null)
-            {
-                return;
-            }
-
-            currentPath.RemoveAt(0);
-            currentPlayer.transform.position = TileCoordToWorldCoord(currentPath[0].x, currentPath[0].y);
-            Debug.Log("Moving");
-            if (currentPath.Count == 1)
-            {
-                currentPath = null;
-            }
+            currentPlayer.GetComponent<UserPlayerScript>().currentPath = currentPath;
+        }
+        else
+        {
+            currentPlayer.GetComponent<UserPlayerScript>().currentPath = null;
         }
     }
 
-    public void spawnPlayers()
+    public void moveNextTile()
     {
+        //for (int i = 0; i < currentPlayer.GetComponent<PlayerScript>().currentPath.Count + 1; i++)
+        try
+        {
+            int i = 0;
+            while (i < currentPlayer.GetComponent<PlayerScript>().currentPath.Count + 1)
+            {
 
+                if (currentPlayer.GetComponent<PlayerScript>().currentPath.Count == 1)
+                {
+                    break;
+                }
+
+                currentPlayer.GetComponent<PlayerScript>().currentPath.RemoveAt(0);
+                currentPlayer.transform.position = TileCoordToWorldCoord(currentPlayer.GetComponent<PlayerScript>().currentPath[0].x, currentPlayer.GetComponent<PlayerScript>().currentPath[0].y);
+                Debug.Log("Moving");
+            }
+        }
+        catch
+        {
+            Debug.Log("Unreachable Tile");
+        }
     }
 
 }

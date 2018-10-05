@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraControl : MonoBehaviour {
-
-    public GameManager gameManager;
  
     private Vector3 Origin;
     private Vector3 Diference;
@@ -13,7 +11,7 @@ public class CameraControl : MonoBehaviour {
     private void Start()
     {
         try {
-            Camera.main.transform.position = gameManager.currentPlayer.transform.position + (new Vector3(8, 4, -8));
+            Camera.main.transform.position = GameManager.Instance.currentPlayer.transform.position + (new Vector3(8, 4, -8));
         }
         catch
         {
@@ -43,7 +41,7 @@ public class CameraControl : MonoBehaviour {
 
         if (Input.GetMouseButton(2))
         {
-            Camera.main.transform.position = gameManager.currentPlayer.transform.position + (new Vector3(8, 4, -8));
+            Camera.main.transform.position = GameManager.Instance.currentPlayer.transform.position + (new Vector3(8, 4, -8));
         }
     }
 }
